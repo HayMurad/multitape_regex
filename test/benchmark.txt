@@ -1,0 +1,81 @@
+abs.txt 25 MB
+rand-abc.txt 10 MB
+rand-abc-small 10 KB
+
+Case 1: 
+regex: "d"
+file: abs.txt
+symbol subsets: {a b c d}       time: 566.599 msec  matches: 0
+symbol subsets: {a b d} {c}     time: 1168.093 msec matches: 0
+symbol subsets: {a d} {b} {c}   time: 1639.966 msec matches: 0
+
+Case 2: 
+regex: "d+de"
+file: rand-abc.txt
+symbol subsets: {a b c d e}     time: 303.232 msec  mathces: 0
+symbol subsets: {a b d e} {c}   time: 663.265 msec  matches: 0
+symbol subsets: {a d e} {b} {c} time: 1173.341 msec matches: 0
+
+Case 3: 
+regex: "dfa+efa+ufa+zfa"
+file: abc.txt
+symbol subsets: {a b c d e f u z}       time: 590.710 msec  matches: 0
+symbol subsets: {a b d e f u z} {c}     time: 1161.269 msec matches: 0
+symbol subsets: {a d e f u z} {b} {c}   time: 1666.602 msec matches: 0
+
+Case 4: [d-z] //d+e+ ... +z
+file: 
+regex: "abc.txt"
+symbol subsets: {a b c [d-z]}       time: 607.406 msec 	matches: 0
+symbol subsets: {a b [d-z]} {c}     time: 1190.104 msec matches: 0
+symbol subsets: {a [d-z]} {b} {c}   time: 1727.392 msec matches: 0
+
+Case 5: 
+regex: "ddd+fff+eee+ggg+hhh+iii+jjj+kkk+(l+m+n)mm+ooo+ppp+qqq+rrr+sss+ttt+uuu+vvv+www+(x+y+z)yy"
+file: abc.txt
+symbol subsets: {a b c [d-z]}       time: 661.601 msec 	matches: 0
+symbol subsets: {a b [d-z]} {c}     time: 1206.483 msec matches: 0
+symbol subsets: {a [d-z]} {b} {c}   time: 1791.952 msec matches: 0
+
+Case 6: 
+regex: "(a+b)aa(aa+bb)cc(a+b)"
+file: abc.txt
+symbol subsets: {a b c}         time: 797.462 msec   matches: 1
+symbol subsets: {a b} {c}       time: 2027.885 msec  matches: 1
+symbol subsets: {a} {b} {c}     time: 27221.783 msec matches: 1
+
+Case 7: 
+regex: "(a+b)aa(aa+bb)cc(a+b)abcabcabd"
+file: rand-abc.txt
+symbol subsets: {a b c}         time: 546.708 msec   matches: 0
+symbol subsets: {a b} {c}       time: 1757.400 msec  matches: 0
+symbol subsets: {a} {b} {c}     time: 27887.012 msec matches: 0
+
+Case 8: 
+regex: "a*(cc+b)"
+file: rand-abc-small.txt
+symbol subsets: {a b c}         time: 0.626 msec    mathces: 4314
+symbol subsets: {a b} {c}       time: 2.315 msec    mathces: 4544
+symbol subsets: {a} {b} {c}     time: 1437.335 msec mathces: 4544
+
+Case 8: 
+regex: "a(c+b)*"
+file: rand-abc-small.txt
+symbol subsets: {a b c}         time: 1.375 msec    mathces: 3493
+symbol subsets: {a b} {c}       time: 749.329 msec  mathces: 3493
+symbol subsets: {a} {b} {c}     time: 1281.113 msec mathces: 3493
+
+Case 9: 
+regex: "aa*c*"
+file: rand-abc-small.txt
+symbol subsets: {a b c}         time: 1.731 msec    mathces: 2351
+symbol subsets: {a b} {c}       time: 385.823 msec  mathces: 1761
+symbol subsets: {a} {b} {c}     time: 2537.697 msec mathces: 1761
+
+Case 10: 
+regex: "(ba)*"
+file: rand-abc-small.txt
+symbol subsets: {a b c}         time: 3.178 msec    matches: 8888
+symbol subsets: {a b} {c}       time: 4.495 msec    matches: 8888
+symbol subsets: {a} {b} {c}     time: 2639.430 msec matches: 6863
+
