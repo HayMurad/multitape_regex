@@ -1,6 +1,9 @@
 #include "DFAutomata.h"
 #include <stack>
 
+DFAutomata::DFAutomata()
+{}
+
 DFAutomata::DFAutomata(int start_state_, const std::set<int> &final_states_, 
 	const std::map<int, std::map<int, char> >& transitions_)
 	: start_state(start_state_)
@@ -156,7 +159,7 @@ void DFAutomata::match_in_the_begining_from_state(int state, tapes_t& tapes, con
 	}
 }
 
-std::vector<std::string> DFAutomata::match_word(const std::string& matching_string, symbol_subsets_t& symbol_subsets)
+std::vector<std::string> DFAutomata::match_word(const std::string& matching_string, const symbol_subsets_t& symbol_subsets)
 {
 	std::vector<std::string> matched_words;
 	int matching_string_index = 0;
@@ -301,4 +304,81 @@ void DFAutomata::match_in_the_begining_from_state_non_recursive(int state, tapes
 		}
 
 	}
+}
+
+bool DFAutomata::match_full_word(const std::string& matching_string, const symbol_subsets_t& symbol_subsets)
+{
+	std::vector<std::deque<char>> tapes(symbol_subsets.size());
+	get_tapes_from_word(matching_string, tapes, symbol_subsets);
+	return match_full_word_from_state(start_state, tapes);
+}
+
+bool DFAutomata::match_full_word(std::vector<std::deque<char>>& tapes, const symbol_subsets_t& symbol_subsets)
+{
+	return match_full_word_from_state(start_state, tapes);
+}
+
+void DFAutomata::get_tapes_from_word(const std::string& word, std::vector<std::deque<char>>& tapes, const symbol_subsets_t& symbol_subsets)
+{
+	for (int i = 0; i < word.size(); i++)
+	{
+		for (int j = 0; j < symbol_subsets.size(); j++)
+		{
+			if (symbol_subsets[j].find(word[i]) != symbol_subsets[j].end())
+			{
+				tapes[j].push_back(word[i]);
+				break;
+			}
+		}
+	}
+}
+
+bool DFAutomata::match_full_word_from_state(int state, std::vector<std::deque<char>>& tapes)
+{
+	bool empty_word = true;
+	auto it = tapes.begin();
+	auto it_end = tapes.end();
+
+	for (; it != it_end; ++it)
+	{
+		if (!it->empty())
+		{
+			empty_word = false;
+			int next_state = transitions[state][(int)it->front()];
+			if (next_state != -1)
+			{
+				char current_symbol = it->front();
+				it->pop_front();
+				if (match_full_word_from_state(next_state, tapes)) 
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	if (!empty_word)
+	{
+		return false;
+	}
+	if (final_states.find(state) == final_states.end())
+	{
+		return false;
+	}
+	return true;
+}
+
+std::vector<std::vector<int>> DFAutomata::get_transitions() const
+{
+	return transitions;
+}
+
+int DFAutomata::get_start_state() const
+{
+	return start_state;
+}
+
+std::set<int> DFAutomata::get_final_states() const
+{
+	return final_states;
 }
